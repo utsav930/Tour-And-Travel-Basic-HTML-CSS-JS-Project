@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Login - Tour & Travels</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(to right, #ffecd2, #fcb69f);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 30px;
+    }
+
+    #login-section {
+      background-color: white;
+      padding: 30px 40px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      max-width: 500px;
+      width: 100%;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    input {
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    input[type="file"] {
+      border: none;
+    }
+
+    button {
+      padding: 12px;
+      background-color: #e67e22;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #d35400;
+    }
+
+    #loginMessage {
+      text-align: center;
+      font-weight: 600;
+      margin-top: 10px;
+    }
+
+    a {
+      color: #e67e22;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 600px) {
+      #login-section {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="login-section">
+    <h1>Login to Your Account</h1>
+
+    <form id="loginForm">
+      <input type="email" id="loginEmail" placeholder="Email" required />
+      <input type="password" id="loginPassword" placeholder="Password" required />
+      
+      <label for="userFile">Select user_registration.txt</label>
+      <input type="file" id="userFile" accept=".txt" required />
+
+      <button type="submit">Login</button>
+    </form>
+
+    <p id="loginMessage"></p>
+
+    <p style="text-align:center; margin-top:10px;">
+      New user? <a href="register.html">Register here</a>
+    </p>
+  </div>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value.trim();
+      const fileInput = document.getElementById('userFile');
+      const file = fileInput.files[0];
+
+      if (!file) {
+        document.getElementById('loginMessage').innerText = 'Please select user_registration.txt file.';
+        document.getElementById('loginMessage').style.color = 'red';
+        return;
+      }
+
+      const reader = new FileReader();
+
+      reader.onload = function(event) {
+        const lines = event.target.result.split('\n');
+        let found = false;
+
+        for (const line of lines) {
+          // Trim and check if line has at least 3 parts separated by '|'
+          const parts = line.trim().split('|');
+          if (parts.length < 3) continue;
+
+          const [name, regEmail, regPassword] = parts;
+
+          if (regEmail === email && regPassword === password) {
+            found = true;
+            break;
+          }
+        }
+
+        const message = document.getElementById('loginMessage');
+        if (found) {
+          message.innerText = 'Login successful! Redirecting...';
+          message.style.color = 'green';
+
+          // Redirect to index.html after 1 second
+          setTimeout(() => {
+            window.location.href = "index.html";
+          }, 1000);
+        } else {
+          message.innerText = 'Invalid email or password.';
+          message.style.color = 'red';
+        }
+      };
+
+      reader.readAsText(file);
+    });
+  </script>
+</body>
+</html>

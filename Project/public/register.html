@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Register - Tour & Travels</title>
+  <style>
+    /* Reset and base */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(to right, #83a4d4, #b6fbff);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 30px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    #register-section {
+      background-color: white;
+      padding: 30px 40px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      max-width: 500px;
+      width: 100%;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    input, select {
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    select {
+      height: 120px;
+      background: #f9f9f9;
+      color: #333;
+    }
+
+    select option {
+      padding: 5px;
+    }
+
+    label {
+      font-weight: 600;
+      margin-top: 10px;
+    }
+
+    button {
+      padding: 12px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #2980b9;
+    }
+
+    p#registerMessage {
+      text-align: center;
+      font-weight: 600;
+      color: green;
+      margin-top: 10px;
+    }
+
+    a {
+      color: #3498db;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 600px) {
+      #register-section {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="register-section">
+    <h1>Register New Account</h1>
+
+    <form id="registerForm">
+      <input type="text" id="regName" placeholder="Full Name" required />
+      <input type="email" id="regEmail" placeholder="Email" required />
+      <input type="password" id="regPassword" placeholder="Password" required />
+
+      <label for="regDesignation">Select Designation(s)</label>
+      <select id="regDesignation" multiple required>
+        <option value="Tourist">Tourist</option>
+        <option value="Guide">Guide</option>
+        <option value="Driver">Driver</option>
+        <option value="Manager">Manager</option>
+        <option value="Photographer">Photographer</option>
+      </select>
+
+      <button type="submit">Register</button>
+    </form>
+
+    <p id="registerMessage"></p>
+
+    <p style="text-align:center; margin-top:10px;">
+      Already have an account? <a href="login.html">Login here</a>
+    </p>
+  </div>
+
+  <script>
+    document.getElementById('registerForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const name = document.getElementById('regName').value.trim();
+      const email = document.getElementById('regEmail').value.trim();
+      const password = document.getElementById('regPassword').value.trim();
+      const select = document.getElementById('regDesignation');
+      const selectedOptions = Array.from(select.selectedOptions).map(opt => opt.value);
+
+      if (!name || !email || !password || selectedOptions.length === 0) {
+        document.getElementById('registerMessage').innerText = 'Please fill all fields and select at least one designation.';
+        return;
+      }
+
+      const content = `${name}|${email}|${password}|${selectedOptions.join(',')}\n`;
+
+      const blob = new Blob([content], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'user_registration.txt';
+      document.body.appendChild(a);
+      a.click();
+
+      setTimeout(() => {
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }, 0);
+
+      document.getElementById('registerMessage').innerText = 'Registration info saved! Redirecting to login...';
+
+      setTimeout(() => {
+        window.location.href = 'login.html';
+      }, 1500);
+    });
+  </script>
+</body>
+</html>
